@@ -254,10 +254,76 @@
 ;; exercise 2.21
 (define (square-list items)
   (if (null? items)
-      null
+      nil
       (cons (* (car items) (car items))
             (square-list (cdr items)))))
 (define (square-list-2 items)
   (map (lambda (x) (* x x)) items))
 ;; end ex 2.21
 
+;; exercise 2.22
+;; As I realized a few minutes ago, doing `(cons list number)` will
+;; create a stupid data structure like this:
+;; (cons (cons (cons 1 nil) 2) 3)
+;; '(((1) . 2) . 3)
+;;
+;; Instead of: (cons 1 (cons 2 (cons 3 nil)))
+;; '(1 2 3)
+;;
+;; end
+;;
+
+;; exercise 2.23
+;; unable to get a good answer to this, as I don't know what to do
+;; with the return value of the function, for some reason 
+(define (for-each proc list1)
+  (if (null? list1)
+      2
+      ((proc (car list1))
+       (for-each proc (cdr list1)))))
+;; end 2.23
+
+
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+
+;; exercise 2.27
+;(define (my-reverse list1)
+;  (define (my-reverse-iter list1 list2)
+;    (if (null? list1)
+;        list2
+;        (my-reverse-iter (cdr list1) (cons (car list1) list2))))
+;  (my-reverse-iter list1 '()))
+(define (my-deep-reverse list1)
+  (define empty-list '())
+  (define (my-deep-reverse-iter list1 accum)
+    (if (null? list1)
+        accum
+        (my-deep-reverse-iter (cdr list1)
+                              (cons (car list1) accum))))
+  (my-deep-reverse-iter list1 empty-list))
+; (define x (list (list 1 2) (list 3 4)))
+; (my-deep-reverse x)
+;; TODO: need to fix this implementation.
+;;
+
+;; exercise 2.28
+;;
+(define (left tree)
+  (car tree))
+(define (right tree)
+  (cdr tree))
+(define (fringe tree)
+  (cond ((null? tree) tree)
+        ((not (pair? tree)) tree)
+        (append (fringe (left tree)) (fringe (right tree)))))
+          
+;; exercise 2.28
+;;
+
+;; exercise 2.24
+;;
