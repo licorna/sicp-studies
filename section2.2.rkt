@@ -53,3 +53,61 @@
       nil
       (append (reverse (cdr list1))
               (list (car list1)))))
+
+;; exercise 2.19
+;;
+;; (staring with coin change from section 1.2.2)
+
+(define (count-change amount)
+  (cc-01 amount 5))
+
+(define (cc-01 amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0)
+             (= kinds-of-coins 0))
+         0)
+        (else
+         (+ (cc-01 amount (- kinds-of-coins 1))
+            (cc-01 (- amount (first-denomination-01
+                           kinds-of-coins))
+                kinds-of-coins)))))
+
+(define (first-denomination-01 kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+;; now exercise 2.19 for real
+
+(define us-coins
+  (list 50 25 10 5 1))
+(define uk-coins
+  (list 100 50 20 10 5 2 1 0.5))
+
+(define (cc amount coin-values)
+  (cond ((= amount 0)
+         1)
+        ((or (< amount 0)
+             (no-more? coin-values))
+         0)
+        (else
+         (+ (cc
+             amount
+             (except-first-denomination
+              coin-values))
+            (cc
+             (- amount
+                (first-denomination
+                 coin-values))
+             coin-values)))))
+
+(define (no-more? list1)
+  (null? list1))
+
+(define (first-denomination list1)
+  (car list1))
+
+(define (except-first-denomination list1)
+  (cdr list1))
