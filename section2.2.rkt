@@ -144,11 +144,16 @@
 ;; exercise 2.21
 ;;
 
+(define (square x)
+  (expt x 2))
+
 (define (square-list-01 items)
   (if (null? items)
       nil
-      (cons (expt (car items) 2)
+      (cons (square (car items))
             (square-list-01 (cdr items)))))
 
 (define (square-list-02 items)
-  (map (lambda (x) (expt x 2)) items))
+  (map (lambda (x) (square x)) items))
+
+
