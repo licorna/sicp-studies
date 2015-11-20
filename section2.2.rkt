@@ -111,3 +111,32 @@
 
 (define (except-first-denomination list1)
   (cdr list1))
+
+
+;; exercise 2.20
+;;
+
+(define (odd-filter z)
+  (define (odd-filter-accum z accum)
+    (if (null? z)
+        accum
+        (odd-filter-accum (cdr z)
+                          (if (odd? (car z))
+                              (append accum (list (car z)))
+                              accum))))
+  (odd-filter-accum z '()))
+
+(define (even-filter z)
+  (define (even-filter-accum z accum)
+    (if (null? z)
+        accum
+        (even-filter-accum (cdr z)
+                           (if (even? (car z))
+                               (append accum (list (car z)))
+                               accum))))
+  (even-filter-accum z '()))
+
+(define (same-parity . z)
+  (if (even? (car z))
+      (even-filter z)
+      (odd-filter z)))
