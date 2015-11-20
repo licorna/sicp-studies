@@ -140,3 +140,15 @@
   (if (even? (car z))
       (even-filter z)
       (odd-filter z)))
+
+;; exercise 2.21
+;;
+
+(define (square-list-01 items)
+  (if (null? items)
+      nil
+      (cons (expt (car items) 2)
+            (square-list-01 (cdr items)))))
+
+(define (square-list-02 items)
+  (map (lambda (x) (expt x 2)) items))
