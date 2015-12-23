@@ -40,6 +40,15 @@
          (* m1 m2))
         (else (list '* m1 m2))))
 
+(define (make-exponentiation b e)
+  (list '** b e))
+
+(define (exponentiation? x)
+  (and (pair? x) (eq? (car x) '**)))
+
+(define (base e) (cadr e))
+(define (exponent e) (caddr e))
+
 (define (sum? x)
   (and (pair? x) (eq? (car x) '+)))
 
@@ -67,5 +76,15 @@
           (make-product 
            (deriv (multiplier exp) var)
            (multiplicand exp))))
+        ((exponentiation? exp)
+         (make-product
+          (make-product
+           (exponent exp)
+           (make-exponentiation
+            (base exp)
+            (make-sum
+             (exponent exp) -1)))
+          (deriv (base exp) var)))
+
         (else (error "unknown expression 
                       type: DERIV" exp))))
