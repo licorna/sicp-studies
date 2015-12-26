@@ -140,6 +140,37 @@
               ((< x2 x2) (ointersection-set set1 (cdr set2)))))))
 
 
+;; Sets as binary trees
 ;;
+
+(define (entry tree) (car tree))
+(define (left-branch tree) (cadr tree))
+(define (right-branch tree) (caddr tree))
+(define (make-tree entry left right)
+  (list entry left right))
+
+(define (element-of-tree? x set)
+  (cond ((null? set) #f)
+        ((= x (entry set)) #t)
+        ((< x (entry set))
+         (element-of-tree? x (left-branch set)))
+        ((> x (entry set))
+         (element-of-tree? x (right-branch set)))))
+
+(define (adjoin-tree x tree)
+  (cond ((null? tree) (make-tree x '() '()))
+        ((= x (entry tree)) tree)
+        ((< x (entry tree))
+         (make-tree
+          (entry tree)
+          (adjoin-tree x (left-branch tree))
+          (right-branch tree)))
+        ((> x (entry tree))
+         (make-tree
+          (entry tree)
+          (left-branch tree)
+          (adjoin-tree x (right-branch tree))))))
+
+         
                
                                            
