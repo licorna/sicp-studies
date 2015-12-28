@@ -204,3 +204,38 @@
                                  left-tree
                                  right-tree)
                       remaining-elts))))))))
+
+
+;; Sets and information retrival
+;;
+
+(define (lookup given-key set-of-records)
+  (cond ((null? set-of-records) #f)
+        ((equal? given-key
+                 (key (car set-of-records)))
+         (car set-of-records))
+        (else
+         (lookup given-key (cdr set-of-records)))))
+
+
+;; exercise 2.66
+;;
+
+(define (make-entry key value)
+  (list key value))
+(define (key entry)
+  (car entry))
+(define (value entry)
+  (cadr entry))
+
+
+(define tree-as-list
+  (list
+   (make-entry 1 "One")
+   (make-entry 2 "Two")
+   (make-entry 3 "Three")
+   (make-entry 4 "Four")
+   (make-entry 5 "Five")
+   (make-entry 6 "Six")))
+
+(define tree (list->tree tree-as-list))
