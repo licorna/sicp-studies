@@ -87,7 +87,7 @@
 ;; Find the path to it in the encoding tree
 ;;
 
-(define (find-symbol symbol tree)
+(define (encode symbol tree)
   (define (in-list? symbol list-1)
     (cond ((null? list-1) #f)
           ((eq? symbol (car list-1)) #t)
@@ -102,5 +102,6 @@
                               (append path '0))
                (find-symbol-1 symbol
                               (right-branch tree)
-                              (append path '1)))))))
+                              (append path '1))))))
+  (find-symbol-1 symbol tree '()))
                
