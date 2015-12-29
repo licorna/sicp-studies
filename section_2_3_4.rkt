@@ -79,3 +79,28 @@
 
 (define sample-message
   '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+
+;;
+;; Implementation
+;;
+;; For each character in the original message
+;; Find the path to it in the encoding tree
+;;
+
+(define (find-symbol symbol tree)
+  (define (in-list? symbol list-1)
+    (cond ((null? list-1) #f)
+          ((eq? symbol (car list-1)) #t)
+          (else (in-list? symbol (cdr list-1)))))
+  (define (find-symbol-1 symbol tree path)
+    (cond ((null? tree) '())
+          ((leaf? tree) path)
+          ((in-list? symbol (symbols tree))
+           (if (in-list? symbol (left-branch tree))
+               (find-symbol-1 symbol
+                              (left-branch tree)
+                              (append path '0))
+               (find-symbol-1 symbol
+                              (right-branch tree)
+                              (append path '1)))))))
+               
