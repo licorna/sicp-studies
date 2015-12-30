@@ -86,22 +86,40 @@
 ;; For each character in the original message
 ;; Find the path to it in the encoding tree
 ;;
+;; Exercise 2.68
+;;
 
-(define (encode symbol tree)
-  (define (in-list? symbol list-1)
-    (cond ((null? list-1) #f)
-          ((eq? symbol (car list-1)) #t)
-          (else (in-list? symbol (cdr list-1)))))
-  (define (find-symbol-1 symbol tree path)
+(define (choose-path symbol tree)
+  (cond ((in-list? symbol (symbols (left-branch tree)))
+         (left-branch tree))
+        ((in-list? symbol (symbols (right-branch tree)))
+         (right-branch tree))
+        (else error "Symbol not in tree")))
+
+(define (in-list? symbol list-1)
+  (cond ((null? list-1) #f)
+        ((eq? symbol (car list-1)) #t)
+        (else (in-list? symbol (cdr list-1)))))
+
+(define (encode-symbol symbol tree)
+  (define (encode-symbol-1 symbol tree path)
     (cond ((null? tree) '())
           ((leaf? tree) path)
           ((in-list? symbol (symbols tree))
            (if (in-list? symbol (left-branch tree))
-               (find-symbol-1 symbol
-                              (left-branch tree)
-                              (append path '0))
-               (find-symbol-1 symbol
-                              (right-branch tree)
-                              (append path '1))))))
-  (find-symbol-1 symbol tree '()))
+               (encode-symbol-1 symbol
+                                (left-branch tree)
+                                (append path '(0)))
+               (encode-symbol-1 symbol
+                                (right-branch tree)
+                                (append path '(1)))))
+          (else error "Error: symbol not in tree")))
+  (encode-symbol-1 symbol tree '()))
+
+
+(define (encode message tree)
+  (if (null? message) '()
+      (append
+       (encode-symbol (car message) tree)
+       (encode (cdr message) tree))))
                
