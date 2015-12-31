@@ -58,3 +58,19 @@
 (define (polar? datum)
   (eq? (type-tag datum) 'polar))
 
+(define (magnitude-rectangular z)
+  (sqrt (+ (square (real-part-rectangular z)))
+        (+ (square (imag-part-rectangular z)))))
+
+(define (angle-rectangular z)
+  (atan (imag-part-rectangular z)
+        (real-part-rectangular z)))
+
+(define (make-from-real-imag-rectangular x y)
+  (attach-tag 'rectangular (cons x y)))
+
+(define (make-from-mag-ang-rectangular x y)
+  (attach-tag 'rectangular
+              (cons (* r (cos a)) (* r (sin a)))))
+
+
