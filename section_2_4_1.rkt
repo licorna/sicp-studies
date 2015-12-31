@@ -23,20 +23,20 @@
    (/ (magnitude z1) (magnitude z2))
    (- (angle z1) (angle z2))))
 
-(define (real-part z) (car z))
-(define (imag-part z) (cdr z))
+(define (real-part-xx z) (car z))
+(define (imag-part-xx z) (cdr z))
 
-(define (magnitude z)
+(define (magnitude-xx z)
   (sqrt (+ (square (real-part z))
            (square (imag-part z)))))
 
-(define (angle z)
+(define (angle-xx z)
   (atan (imag-part z) (real-part z)))
 
-(define (make-from-real-imag x y)
+(define (make-from-real-imag-xx x y)
   (cons x y))
 
-(define (make-from-mag-ang r a)
+(define (make-from-mag-ang-xx r a)
   (cons (* r (cos a)) (* r (sin a))))
 
 (define (attach-tag type-tag contents)
@@ -73,4 +73,57 @@
   (attach-tag 'rectangular
               (cons (* r (cos a)) (* r (sin a)))))
 
+(define (real-part-polar z)
+  (* (magnitude-polar z)
+     (cos (angle-polar z))))
+
+(define (imag-part-polar z)
+  (* (magnitude-polar z)
+     (sin (angle-polar z))))
+
+(define (magnitude-polar z) (car z))
+(define (angle-polar z) (cdr z))
+
+(define (make-from-real-imag-polar x y)
+  (attach-tag 'polar
+              (cons (sqrt (+ (square x) (square y)))
+                    (atan y x))))
+
+(define (make-from-mag-ang-polar r a)
+  (attach-tag 'polar (cons r a)))
+
+
+(define (real-part z)
+  (cond ((rectangular? z)
+         (real-part-rectangular (contents z)))
+        ((polar? z)
+         (real-part-polar (contents z)))
+        (else (error "Unknown type: REAL-PART" z))))
+
+(define (imag-part z)
+  (cond ((rectangular? z)
+         (imag-part-rectangular (contents z)))
+        ((polar? z)
+         (imag-part-polar (contents z)))
+        (else (error "Unknown type: IMAG-PART" z))))
+
+(define (magnitude z)
+  (cond ((rectangular? z)
+         (magnitude-rectangular (contents z)))
+        ((polar? z)
+         (magnitude-polar (contents z)))
+        (else (error "Unknown type: MAGNITUDE" z))))
+
+(define (angle z)
+  (cond ((rectangular? z)
+         (angle-rectangular (contents z)))
+        ((polar? z)
+         (angle-polar (contents z)))
+        (else (error "Unknown type: ANGLE" z))))
+
+(define (make-from-real-imag x y)
+  (make-from-real-imag-rectangular x y))
+
+(define (make-from-mag-ang r a)
+  (make-from-mag-ang-polar r a))
 
