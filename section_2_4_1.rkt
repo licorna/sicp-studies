@@ -39,3 +39,22 @@
 (define (make-from-mag-ang r a)
   (cons (* r (cos a)) (* r (sin a))))
 
+(define (attach-tag type-tag contents)
+  (cons type-tag contents))
+
+(define (type-tag datum)
+  (if (pair? datum)
+      (cat datum)
+      (error "Bad tagged datum: TYPE-TAG" datum)))
+
+(define (contents datum)
+  (if (pair? datum)
+      (cdr datum)
+      (error "Bad tagged datum: CONTENTS" datum)))
+
+(define (rectangular? datum)
+  (eq? (type-tag datum) 'rectangular))
+
+(define (polar? datum)
+  (eq? (type-tag datum) 'polar))
+
