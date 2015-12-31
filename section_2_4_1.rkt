@@ -14,12 +14,12 @@
    (- (imag-part z1) (imag-part z2))))
 
 (define (mul-complex z1 z2)
-  (make-from-real-imag
+  (make-from-mag-ang
    (* (magnitude z1) (magnitude z2))
    (+ (angle z1) (angle z2))))
 
 (define (div-complex z1 z2)
-  (make-from-real-imag
+  (make-from-mag-ang
    (/ (magnitude z1) (magnitude z2))
    (- (angle z1) (angle z2))))
 
