@@ -194,6 +194,9 @@
   (define (deriv exp var)
     (make-sum (deriv (addend exp) var)
               (deriv (augend exp) var)))
+  ;; set methods on table
+  (define (tag x) (attach-tag 'sum))
+  (put 'deriv '(sum) deriv)
   'done)
 
 (define (install-product-package)
@@ -218,4 +221,10 @@
      (make-product
       (deriv (multiplier exp) var)
       (multiplicand exp))))
+  ;; set methods on table
+  (define (tag x) (attach-tag 'product))
+  (put 'deriv '(product) deriv)
   'done)
+
+(define (deriv exp var)
+  (apply-generic 'deriv exp var))
