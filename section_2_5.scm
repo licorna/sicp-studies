@@ -78,6 +78,20 @@
 
 (define (make-rational n d)
   ((get 'make 'rational) n d))
+
+;;
+;; Exercise 2.78
+;;
+
+(define (type-tag datum)
+  (if (pair? datum)
+      (car datum)
+      (error "Bad tagged datum: TYPE-TAG" datum)))
+
+(define (contents datum)
+  (if (pair? datum)
+      (cdr datum)
+      (error "Bad tagged datum: CONTENTS" datum)))
+
+
   
-    
-                 
