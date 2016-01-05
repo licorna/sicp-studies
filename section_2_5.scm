@@ -60,6 +60,11 @@
   (define (div-rat x y)
     (make-rat (* (numer x) (denom y))
               (* (denom x) (numer y))))
+  (define (equ? x y)
+    (and (= (type-tag x) 'rational)
+         (= (type-tag y) 'rational)
+         (= (numer x) (numer y))
+         (= (denom x) (denom y))))
   (define (tag x) (attach-tag 'rational x))
   (put 'add '(rational rational)
        (lambda (x y) (tag add-rat x y)))
@@ -71,6 +76,8 @@
        (lambda (x y) (tag div-rat x y)))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
+  (put 'equ? 'rational
+       (lambda x y) (equ? x y))
   'done)
 
 (define (make-rational n d)
@@ -100,6 +107,11 @@
     (make-from-mag-ang
      (/ (magnitude z1) (magnitude z2))
      (- (angle z1) (angle z2))))
+  (define (equ? z1 z2)
+    (and (= (type-tag z1) 'complex)
+         (= (type-tag z2) 'complex)
+         (= (real-part z1) (real-part z2))
+         (= (imag-part z1) (imag-part z2))))
   (define (tag z) (attach-tag 'complex z))
   (put 'add '(complex complex)
        (lambda (z1 z2)
@@ -119,6 +131,9 @@
   (put 'make-from-mag-ang 'complex
        (lambda (r a)
          (tag (make-from-mag-ang r a))))
+  (put 'equ? 'complex
+       (lambda (z1 z2)
+         (equ? z1 z2)))
   'done)
 
 ;;
@@ -145,3 +160,10 @@
 ;;
 
 
+(define (install-generic-math-package)
+  (define (equ? n1 n2)
+    (cond [(and (number? n1) (number? n2)) (=number? n1 n2)]
+          [(and (complex? n1) (complex? n2) ((get 'equ? 'complex) n1 n2))]
+          [(and (rational? n1) (rational? n2) ((get 'equ? 'rational) n1 n2))]
+          [else (error "Invalid type: EQU?" n1 n2)]))
+  'done)
