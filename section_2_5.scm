@@ -66,6 +66,9 @@
          (= (numer x) (numer y))
          (= (denom x) (denom y))))
   (define (tag x) (attach-tag 'rational x))
+  (define (rational-list? lst)
+    "Will return true if the whole lst consists of rationals."
+    (andmap (lambda (x) (rational? x) lst)))
   (put 'add '(rational rational)
        (lambda (x y) (tag add-rat x y)))
   (put 'sub '(rational rational)
@@ -77,7 +80,9 @@
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
   (put 'equ? 'rational
-       (lambda x y) (equ? x y))
+       (lambda (x y) (equ? x y)))
+  (put 'rational-list 'rational
+       (lambda (lst) (rational-list? lst)))
   'done)
 
 (define (make-rational n d)
@@ -112,6 +117,8 @@
          (= (type-tag z2) 'complex)
          (= (real-part z1) (real-part z2))
          (= (imag-part z1) (imag-part z2))))
+  (define (complex-list lst)
+    (andmap (lambda (x) (complex? x) lst)))
   (define (tag z) (attach-tag 'complex z))
   (put 'add '(complex complex)
        (lambda (z1 z2)
@@ -134,6 +141,8 @@
   (put 'equ? 'complex
        (lambda (z1 z2)
          (equ? z1 z2)))
+  (put 'complex-list 'complex
+       (lambda (lst) (complex-list lst)))
   'done)
 
 ;;
@@ -157,8 +166,8 @@
 
 ;;
 ;; Exercise 2.79
+;; Exercise 2.80
 ;;
-
 
 (define (install-generic-math-package)
   (define (equ? n1 n2)
@@ -166,4 +175,6 @@
           [(and (complex? n1) (complex? n2) ((get 'equ? 'complex) n1 n2))]
           [(and (rational? n1) (rational? n2) ((get 'equ? 'rational) n1 n2))]
           [else (error "Invalid type: EQU?" n1 n2)]))
+  (define (zero? n1 n2)
+    (cond [
   'done)
