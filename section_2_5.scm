@@ -19,9 +19,6 @@
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
 
-(define (attach-tag tag symbol)
-  (cons tag symbol))
-
 
 ;; Scheme number Package
 (define (install-scheme-number-package)
@@ -79,19 +76,72 @@
 (define (make-rational n d)
   ((get 'make 'rational) n d))
 
+
+;; Complex package
+(define (install-complex-package)
+  (define (make-from-real-imag x y)
+    ((get 'make-from-real-imag
+          'rectangular) x y))
+  (define (make-from-mag-ang r a)
+    ((get 'make-from-mag-and
+          'polar) r a))
+  (define (add-complex z1 z2)
+    (make-from-real-imag
+     (+ (real-part z1) (real-part z2))
+     (+ (imag-part z1) (imag-part z2))))
+  (define (sub-complex z1 z2)
+    (make-from-real-imag
+     (- (real-part z1) (real-part z2))))
+  (define (mul-complex z1 z2)
+    (make-from-mag-ang
+     (* (magnitude z1) (magnitude z2))
+     (+ (angle z1) (angle z2))))
+  (define (div-complex z1 z2)
+    (make-from-mag-ang
+     (/ (magnitude z1) (magnitude z2))
+     (- (angle z1) (angle z2))))
+  (define (tag z) (attach-tag 'complex z))
+  (put 'add '(complex complex)
+       (lambda (z1 z2)
+         (tag (add-complex z1 z2))))
+  (put 'sub '(complex complex)
+       (lambda (z1 z2)
+         (tag (sub-complex z1 z2))))
+  (put 'mul '(complex complex)
+       (lambda (z1 z2)
+         (tag (mul-complex z1 z2))))
+  (put 'div '(complex complex)
+       (lambda (z1 z2)
+         (tag (div-complex z1 z2))))
+  (put 'make-from-real-imag 'complex
+       (lambda (x y)
+         (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'complex
+       (lambda (r a)
+         (tag (make-from-mag-ang r a))))
+  'done)
+
 ;;
 ;; Exercise 2.78
 ;;
 
 (define (type-tag datum)
-  (if (pair? datum)
-      (car datum)
-      (error "Bad tagged datum: TYPE-TAG" datum)))
+  (cond [(number? datum) ('number)]
+        [(pair? datum) (car datum)]
+        [else (error "Bad tagged datum: TYPE-TAG" datum)]))
 
 (define (contents datum)
-  (if (pair? datum)
-      (cdr datum)
-      (error "Bad tagged datum: CONTENTS" datum)))
+  (cond [(number? datum) (datum)]
+        [(pair? datum) (cdr datum)]
+        [else (error "Bad tagged datum: CONTENTS" datum)]))
+
+(define (attach-tag tag symbol)
+  (cond [(number? symbol) (symbol)]
+        [(symbol? symbol) (cons tag symbol)]
+        [else (error "Should be number or symbol: ATTACH-TAG" tag symbol)]))
+
+;;
+;; Exercise 2.79
+;;
 
 
-  
