@@ -95,7 +95,7 @@
     ((get 'make-from-real-imag
           'rectangular) x y))
   (define (make-from-mag-ang r a)
-    ((get 'make-from-mag-and
+    ((get 'make-from-mag-ang
           'polar) r a))
   (define (add-complex z1 z2)
     (make-from-real-imag
@@ -143,6 +143,10 @@
          (equ? z1 z2)))
   (put 'complex-list 'complex
        (lambda (lst) (complex-list lst)))
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magniitude '(complex) magnitude)
+  (put 'angle '(complex) angle)
   'done)
 
 ;;
@@ -175,6 +179,8 @@
           [(and (complex? n1) (complex? n2) ((get 'equ? 'complex) n1 n2))]
           [(and (rational? n1) (rational? n2) ((get 'equ? 'rational) n1 n2))]
           [else (error "Invalid type: EQU?" n1 n2)]))
-  (define (zero? n1 n2)
-    (cond [
+  (define (zero? n1)
+    (cond [(and (number? n1) (= n1 0))]
+          [(and (complex? n1) (= (real-part n1) (imag-part n1) 0))]
+          [(and (rational? n1) (= (numer n1) 0))]))
   'done)
